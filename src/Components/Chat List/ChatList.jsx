@@ -58,12 +58,19 @@ function ChatList() {
 
 
                 <div className="xl:w-[60%] lg:w-[60%] md:hidden sm:hidden lg:block xl:block hidden relative">
+                    <div className="flex flex-col justify-center text-white items-center h-[100%]">
+
+                    <h1 className="text-4xl font-semibold text-center px-5">Ahmed Whatsapp For Windows Linux & MacOS </h1>
+                    <p className="text-lg mt-4 text-center px-5">Send And Recieve Message Without Keeping Your Phone Online</p>
+                    </div>
+
+                {/* 
                     <ChatTop />
 
-                    {/* Center Area for Chat Messages */}
+                    
                     <ChatCenter />
 
-                    {/* Bottom Input Area */}
+                   
                     <div className="bottom overflow-hidden flex justify-center items-center fixed bottom-0 right-0 w-[60%] h-[60px] bg-gray-800 p-2">
                         <IoMdAttach className="text-white text-3xl mx-3 cursor-pointer" />
                         <input
@@ -73,7 +80,8 @@ function ChatList() {
                         />
                         <AiFillAudio className="text-white text-3xl mx-3 cursor-pointer" />
                     </div>
-                </div>
+                */}
+                </div> 
 
 
 
