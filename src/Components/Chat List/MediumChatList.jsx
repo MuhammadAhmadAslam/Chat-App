@@ -11,7 +11,7 @@ import Chat from "./Chat";
 import ChatTop from "./ChatTop";
 import "./Chat.css"
 import ChatCenter from "./ChatCenter";
-function ChatList() {
+function MediumChat() {
 
 
     const chatEndRef = useRef(null);
@@ -32,7 +32,7 @@ function ChatList() {
         <>
             <div className="main flex">
 
-                <div className="w-full xl:w-[40%] lg:w-[40%] py-5 border-r h-[100vh] overflow-hidden">
+                <div className="xl:w-[40%] lg:w-[40%] md:hidden sm:hidden lg:block xl:block hidden">
 
 
                     <div className="flex justify-between items-center">
@@ -57,14 +57,14 @@ function ChatList() {
                 </div>
 
 
-                <div className="xl:w-[60%] lg:w-[60%] md:hidden sm:hidden lg:block xl:block hidden relative">
+                <div className="w-full xl:w-[60%] lg:w-[60%] py-5 border-r h-[100vh] overflow-hidden          relative">
                     <ChatTop />
 
                     {/* Center Area for Chat Messages */}
                     <ChatCenter />
 
                     {/* Bottom Input Area */}
-                    <div className="bottom overflow-hidden flex justify-center items-center fixed bottom-0 right-0 w-[60%] h-[60px] bg-gray-800 p-2">
+                    <div className="bottom overflow-hidden flex justify-center items-center fixed bottom-0 right-0 w-[100%] lg:w-[60%] h-[60px] bg-gray-800 p-2">
                         <IoMdAttach className="text-white text-3xl mx-3 cursor-pointer" />
                         <input
                             type="text"
@@ -85,4 +85,4 @@ function ChatList() {
 }
 
 
-export default ChatList;
+export default MediumChat;
