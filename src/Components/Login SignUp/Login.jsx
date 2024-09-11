@@ -1,8 +1,27 @@
-import React from "react";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import React, { useState } from "react";
 import { FaEnvelope, FaUser, FaLock } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { auth } from "../Firebase/firebase";
 
 function Login() {
+
+      let [ email , setEmail ] = useState('')
+      let [ password , setPassword] = useState('')
+      let navigate = useNavigate()
+      let handleSignIn = async (event) => {
+        event.preventDefault()
+        signInWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          const user = userCredential.user;
+          navigate('/')
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+        });
+      }
+
   return (
     <div className="flex min-h-[100vh] h-[100%] justify-center items-center">
       <div className="max-w-md w-full p-4 rounded shadow-md">
@@ -18,6 +37,8 @@ function Login() {
               id="email"
               className="w-full p-2 pl-10 text-sm text-gray-700"
               placeholder="example@example.com"
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
             />
           </div>
           <label className="block mb-3 text-white mt-4" htmlFor="password">
@@ -30,15 +51,18 @@ function Login() {
               id="password"
               className="w-full p-2 pl-10 text-sm text-gray-700"
               placeholder="Choose a password"
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
             />
           </div>
           <div className="flex justify-center items-center mb-5 mt-5">
-          <button
-            type="submit"
-            className="bg-blue-500 hover:bg-blue-700 mt-5 text-xl text-white font-bold py-2 px-4 rounded"
-          >
-            Sign In
-          </button>
+            <button
+              type="submit"
+              className="bg-blue-500 hover:bg-blue-700 mt-5 text-xl text-white font-bold py-2 px-4 rounded"
+              onClick={handleSignIn}
+            >
+              Sign In
+            </button>
           </div>
           <Link to={'/signup'} className="text-lg text-blue-300 mt-4">
             Donot have an account? <a href="#" className="text-white hover:text-blue-700">SignUp</a>

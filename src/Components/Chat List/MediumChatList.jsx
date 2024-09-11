@@ -1,5 +1,4 @@
-import React from "react";
-import { useRef, useEffect } from "react";
+import React, { useContext, useRef, useEffect, useState } from "react";
 import { FaCirclePlus } from "react-icons/fa6";
 import { SlOptionsVertical } from "react-icons/sl";
 import { FaUserCircle } from "react-icons/fa";
@@ -11,10 +10,35 @@ import Chat from "./Chat";
 import ChatTop from "./ChatTop";
 import "./Chat.css"
 import ChatCenter from "./ChatCenter";
+import { LuLogOut } from "react-icons/lu";
+import { signOut, getAuth } from "firebase/auth";
+import { auth } from "../Firebase/firebase";
+import { useNavigate } from "react-router";
+import { UserContext } from "../app context/Usercontext";
+import { collection, getDocs, getFirestore } from "firebase/firestore";
+import { app } from "../Firebase/firebase";
+import Popup from "./Popup";
 function MediumChat() {
 
 
+
+    const db = getFirestore(app);
     const chatEndRef = useRef(null);
+    let navigate = useNavigate()
+    let { user } = useContext(UserContext)
+    console.log(user);
+    const [showPopup, setShowPopup] = useState(false);
+
+    const auth = getAuth();
+    const Currentuser = auth.currentUser;
+
+    if (Currentuser) {
+        console.log('user login ha if ki condition mae');
+    } else {
+        console.log('user login nahe ha if ki condition mae');
+        navigate('/login')
+    }
+
 
 
     const scrollToBottom = () => {
@@ -27,7 +51,55 @@ function MediumChat() {
     }, []);
 
 
+    let handleSignOut = () => {
+        console.log('logout.... ');
+        user.isLogin = false;
+        user.userInfo.uid = ""
+        user.userInfo.email = ""
+        signOut(auth).then(() => {
+            console.log('logout successfully');
 
+        }).catch((error) => {
+            console.log('masla arha ha');
+            console.log(error);
+
+        });
+
+
+        if (Currentuser) {
+            console.log('user login ha if ki condition mae');
+        } else {
+            console.log('user login nahe ha if ki condition mae');
+            navigate('/login')
+        }
+
+    }
+
+
+    let [userPorfile, setUser] = useState([])
+    let gettingData = async () => {
+        const querySnapshot = await getDocs(collection(db, "Users Information"));
+        querySnapshot.forEach((doc) => {
+            let data = doc.data()
+            console.log(data.uid);
+            console.log(Currentuser.uid);
+            console.log(data.uid == Currentuser.uid);
+            data.uid == Currentuser.uid ? setUser(data) : ''
+        });
+    }
+
+
+    useEffect(() => {
+        gettingData()
+        console.log(userPorfile, 'user profile');
+    }, [])
+
+
+
+
+    const handleTogglePopup = () => {
+        setShowPopup(!showPopup);
+    }
     return (
         <>
             <div className="main flex">
@@ -37,10 +109,17 @@ function MediumChat() {
 
                     <div className="flex justify-between items-center">
                         <h1 className="text-white px-3 text-2xl font-semibold">Chats</h1>
-                        <div className="flex">
+                        <div className="flex justify-center items-center">
                             <FaCirclePlus className="text-white text-3xl cursor-pointer" />
-                            <SlOptionsVertical className="text-white text-3xl mx-3 cursor-pointer" />
+                            {
+                                userPorfile.profilePicture ? <img src={userPorfile.profilePicture} className="w-[30px] cursor-pointer rounded-full mx-3" onClick={handleTogglePopup} /> : <FaUserCircle className="text-white text-3xl cursor-pointer" onClick={handleTogglePopup} />
+                            }
+
+                            <LuLogOut className="text-white text-3xl mx-3 cursor-pointer" onClick={handleSignOut} />
                         </div>
+                        {showPopup && (
+                            <Popup user={userPorfile} onClose={handleTogglePopup} />
+                        )}
                     </div>
 
 

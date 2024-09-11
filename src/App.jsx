@@ -1,17 +1,24 @@
-import { useState , useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import ChatList from './Components/Chat List/ChatList';
 import Login from './Components/Login SignUp/Login';
 import SignUp from './Components/Login SignUp/SignUp';
+import UserContextProvider, { UserContext } from './Components/app context/Usercontext';
 function App() {
 
 
-  let user = false;
+  let { user } = useContext(UserContext)
+  console.log(user);
+
+
   return (
     <>
-     
-        {
-          user ? <ChatList /> : <SignUp />
-        }
+
+
+      {
+        user.isLogin ? <ChatList /> : <SignUp />
+      }
+
+
 
     </>
   )
