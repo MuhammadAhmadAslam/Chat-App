@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useEffect, useState } from "react";
+import React, { useContext , useRef , useEffect , useState } from "react";
 import { FaCirclePlus } from "react-icons/fa6";
 import { SlOptionsVertical } from "react-icons/sl";
 import { FaUserCircle } from "react-icons/fa";
@@ -17,23 +17,22 @@ import { useNavigate } from "react-router";
 import { UserContext } from "../app context/Usercontext";
 import { collection, getDocs, getFirestore } from "firebase/firestore";
 import { app } from "../Firebase/firebase";
-import Popup from "./Popup";
+import Swal from "sweetalert2";
 function MediumChat() {
 
 
-
+    
     const db = getFirestore(app);
     const chatEndRef = useRef(null);
     let navigate = useNavigate()
     let { user } = useContext(UserContext)
     console.log(user);
-    const [showPopup, setShowPopup] = useState(false);
 
     const auth = getAuth();
     const Currentuser = auth.currentUser;
 
     if (Currentuser) {
-        console.log('user login ha if ki condition mae');
+        console.log('user login ha if ki condition mae');   
     } else {
         console.log('user login nahe ha if ki condition mae');
         navigate('/login')
@@ -72,11 +71,11 @@ function MediumChat() {
             console.log('user login nahe ha if ki condition mae');
             navigate('/login')
         }
-
+    
     }
+    
 
-
-    let [userPorfile, setUser] = useState([])
+    let [userPorfile , setUser] = useState([])
     let gettingData = async () => {
         const querySnapshot = await getDocs(collection(db, "Users Information"));
         querySnapshot.forEach((doc) => {
@@ -87,19 +86,27 @@ function MediumChat() {
             data.uid == Currentuser.uid ? setUser(data) : ''
         });
     }
-
-
+    
+    
     useEffect(() => {
         gettingData()
-        console.log(userPorfile, 'user profile');
-    }, [])
+        console.log(userPorfile , 'user profile');
+   } ,[] )
+
+   let handlePopUp = () => {
+    Swal.fire({
+        title: '<h1>User Profile</h1>',
+        html: `${userPorfile.profilePicture ?  '<img src=${userPorfile?.profilePicture} alt="Image" style="display: block; margin: 20px auto; width: 80px; height:80px; border-radius: 50%;">' : <FaUserCircle onClick={handlePopUp} className="text-white text-3xl cursor-pointer" />}` +
+              `<h1 style="font-size: 30px; font-weight: bold;">${userPorfile.username}</h1>` +
+              `<p>Email : ${userPorfile.email}</p>` +
+              `<p>UID : ${userPorfile.uid}</p>` +
+              `<p></p>`,
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#000'
+      })
+}
 
 
-
-
-    const handleTogglePopup = () => {
-        setShowPopup(!showPopup);
-    }
     return (
         <>
             <div className="main flex">
@@ -112,14 +119,11 @@ function MediumChat() {
                         <div className="flex justify-center items-center">
                             <FaCirclePlus className="text-white text-3xl cursor-pointer" />
                             {
-                                userPorfile.profilePicture ? <img src={userPorfile.profilePicture} className="w-[30px] cursor-pointer rounded-full mx-3" onClick={handleTogglePopup} /> : <FaUserCircle className="text-white text-3xl cursor-pointer" onClick={handleTogglePopup} />
+                                userPorfile.profilePicture ? <img src={userPorfile.profilePicture} className="w-[30px] cursor-pointer rounded-full mx-3" onClick={handlePopUp}/> :  <FaUserCircle onClick={handlePopUp} className="text-white text-3xl cursor-pointer" />
                             }
-
+                           
                             <LuLogOut className="text-white text-3xl mx-3 cursor-pointer" onClick={handleSignOut} />
                         </div>
-                        {showPopup && (
-                            <Popup user={userPorfile} onClose={handleTogglePopup} />
-                        )}
                     </div>
 
 

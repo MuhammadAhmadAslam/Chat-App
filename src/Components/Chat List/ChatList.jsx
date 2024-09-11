@@ -117,7 +117,7 @@ function ChatList() {
                         <div className="flex justify-center items-center">
                             <FaCirclePlus className="text-white text-3xl cursor-pointer" />
                             {
-                                userPorfile.profilePicture ? <img src={userPorfile?.profilePicture} className="w-[30px] cursor-pointer rounded-full mx-3" onClick={handlePopUp}/> :  <FaUserCircle className="text-white text-3xl cursor-pointer" />
+                                userPorfile.profilePicture ? <img src={userPorfile?.profilePicture} className="w-[30px] cursor-pointer rounded-full mx-3" onClick={handlePopUp}/> :  <FaUserCircle onClick={handlePopUp} className="text-white text-3xl cursor-pointer" />
                             }
                            
                             <LuLogOut className="text-white text-3xl mx-3 cursor-pointer" onClick={handleSignOut} />
@@ -131,6 +131,21 @@ function ChatList() {
 
                     <div className="overflow-y-scroll h-[100%] custom-scrollbar">
                         <div className="mt-4 overflow-hidden">
+                            <Chat />
+                            <Chat />
+                            <Chat />
+                            <Chat />
+                            <Chat />
+                            <Chat />
+                            <Chat />
+                            <Chat />
+                            <Chat />
+                            <Chat />
+                            <Chat />
+                            <Chat />
+                            <Chat />
+                            <Chat />
+                            <Chat />
                             <Chat />
                             <Chat />
                         </div>
