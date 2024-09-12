@@ -19,6 +19,7 @@ function SignUp() {
     let navigate = useNavigate()
     
     async function signUpUser() {
+
         setLoading(true);
         createUserWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
@@ -45,6 +46,15 @@ function SignUp() {
                                 profilePicture: downloadURL,
                                 uid: user.uid,
                             });
+                            const userChat = doc(db, 'User Chats', user.uid);
+                            setDoc(userChat, {
+                                username,
+                                email,
+                                profilePicture: downloadURL,
+                                uid: user.uid,
+                                userChats: {}
+                            });
+
 
                             setUser(user);
                             setLoading(false);
@@ -129,7 +139,7 @@ function SignUp() {
                             disabled={loading}
                         >
                             {
-                                loading ? 'Loading.......' : 'SignUp'
+                                loading ? 'Creating Account....' : 'SignUp'
                             }
                         </button>
                     </div>

@@ -11,7 +11,7 @@ function RouteData(){
         <BrowserRouter>
             <Routes>
                 <Route path="/" element={<App />} />
-                <Route path="/chat" element={<MediumChat />} />
+                <Route path="/chat/uid/:uid/userName/:userName/" element={<MediumChat />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/signup" element={<SignUp />} />
             </Routes>

@@ -12,25 +12,22 @@ import { useNavigate } from "react-router";
 import { UserContext } from "../app context/Usercontext";
 import { auth } from "../Firebase/firebase";
 import { getAuth, signOut } from "firebase/auth";
-import { collection, getDocs, getFirestore } from "firebase/firestore";
+import { collection, getDocs, getFirestore , onSnapshot} from "firebase/firestore";
 import { app } from "../Firebase/firebase";
 import Swal from "sweetalert2";
+import { Link } from "react-router-dom";
 function ChatList() {
 
     const db = getFirestore(app);
     let navigate = useNavigate()
     let { user } = useContext(UserContext)
-    console.log(user);
+    let [allUsers , setAllUsers] = useState([])
 
     const auth = getAuth();
     const Currentuser = auth.currentUser;
 
     if (Currentuser) {
-        console.log('user login ha if ki condition mae');
-
     } else {
-        // No user is signed in.
-        console.log('user login nahe ha if ki condition mae');
         navigate('/login')
     }
 
@@ -49,24 +46,20 @@ function ChatList() {
 
 
     let handleSignOut = () => {
-        console.log('logout.... ');
         user.isLogin = false;
         user.userInfo.uid = ""
         user.userInfo.email = ""
         signOut(auth).then(() => {
-            console.log('logout successfully');
+
 
         }).catch((error) => {
-            console.log('masla arha ha');
             console.log(error);
 
         });
 
 
         if (Currentuser) {
-            console.log('user login ha if ki condition mae');
         } else {
-            console.log('user login nahe ha if ki condition mae');
             navigate('/login')
         }
 
@@ -78,9 +71,6 @@ function ChatList() {
         const querySnapshot = await getDocs(collection(db, "Users Information"));
         querySnapshot.forEach((doc) => {
             let data = doc.data()
-            console.log(data.uid);
-            console.log(Currentuser.uid);
-            console.log(data.uid == Currentuser.uid);
             data.uid == Currentuser.uid ? setUser(data) : ''
         });
     }
@@ -88,7 +78,7 @@ function ChatList() {
     
     useEffect(() => {
         gettingData()
-        console.log(userPorfile , 'user profile');
+        gettingUserChat()
    } ,[] )
 
 
@@ -104,6 +94,21 @@ function ChatList() {
             confirmButtonColor: '#000'
           })
     }
+
+    let gettingUserChat = () => {
+        const collectionRef = collection(db, 'Users Information');
+        onSnapshot(collectionRef, (querySnapshot) => {
+          const allUsersArray = [];
+          querySnapshot.forEach((doc) => {
+            let data = doc.data();
+            allUsersArray.push(data);
+          });
+          setAllUsers(allUsersArray);
+        });
+      }
+
+
+      
 
     return (
         <>
@@ -131,23 +136,15 @@ function ChatList() {
 
                     <div className="overflow-y-scroll h-[100%] custom-scrollbar">
                         <div className="mt-4 overflow-hidden">
-                            <Chat />
-                            <Chat />
-                            <Chat />
-                            <Chat />
-                            <Chat />
-                            <Chat />
-                            <Chat />
-                            <Chat />
-                            <Chat />
-                            <Chat />
-                            <Chat />
-                            <Chat />
-                            <Chat />
-                            <Chat />
-                            <Chat />
-                            <Chat />
-                            <Chat />
+                        {
+                            allUsers.map((user , index) => (
+                            <div className="border-b-[0.1rem] pb-5">
+                            <Link to={`/chat/uid/${user.uid}/userName/:${user.username}/`} key={user.uid} className="border-b-[1px] pb-4">
+                            <Chat userName={user.username} userProfile={user.profilePicture} uid={user.uid} />
+                            </Link>
+                            </div>
+                            ))
+                        }
                         </div>
                     </div>
                 </div>
