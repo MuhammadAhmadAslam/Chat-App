@@ -555,6 +555,42 @@ function MediumChat() {
 
     };
 
+
+    const sendMessageByKey = async (event) => {
+        console.log(event.key);
+        
+       if (event.key == 'Enter') {
+           setMsgInput('')
+           const chatId = [Currentuser.uid, uid].sort().join("_");  // Unique chat ID
+           const docRef = doc(db, "chats", chatId);
+           const newMessage = {
+            senderUid: Currentuser.uid,
+            recieverUid: uid,
+            message: msgInput,
+            time: new Date().toLocaleTimeString(),
+            day: new Date().toDateString()
+        };
+
+        const chatSnapshot = await getDoc(docRef);
+
+        if (chatSnapshot.exists()) {
+            // Update the existing chat
+            await updateDoc(docRef, {
+                messages: [...chatSnapshot.data().messages, newMessage]
+            });
+
+        } else {
+            // Create a new chat document
+            await setDoc(docRef, {
+                messages: [newMessage],
+                participants: [Currentuser.uid, uid]
+            });
+            setMsgInput('')
+        }
+
+    }
+
+    };
     useEffect(() => {
         gettingData();
         gettingMessages();
@@ -565,27 +601,6 @@ function MediumChat() {
     return (
         <div className="main flex">
             {/* Left Side - Chat List */}
-            {/* <div className="w-full xl:w-[40%] lg:w-[40%] py-5 border-r h-[100vh] hidden md:hidden sm:hidden lg:block xl:block overflow-hidden">
-                <div className="flex justify-between items-center">
-                    <h1 className="text-white px-3 text-2xl font-semibold">Chats</h1>
-                    <div className="flex justify-center items-center">
-                        {userProfile.profilePicture ? (
-                            <img src={userProfile.profilePicture} className="w-[30px] cursor-pointer rounded-full mx-3" onClick={handlePopUp} />
-                        ) : (
-                            <FaUserCircle onClick={handlePopUp} className="text-white text-3xl cursor-pointer" />
-                        )}
-                        <LuLogOut className="text-white text-3xl mx-3 cursor-pointer" onClick={handleSignOut} />
-                    </div>
-                </div>
-                <div className="overflow-y-scroll h-[100%] custom-scrollbar">
-                    {allUsers.map((user, index) => (
-                        <Link to={`/chat/uid/${user.uid}/userName/:${user.username}/`} key={user.uid}>
-                            <Chat userName={user.username} userProfile={user.profilePicture} uid={user.uid} />
-                        </Link>
-                    ))}
-                </div>
-            </div> */}
-
 
             <div className="flex-col p-4 bg-white dark:bg-card rounded-lg shadow-md w-full xl:w-[40%] lg:w-[40%] py-5 border-r h-[100vh] hidden md:hidden sm:hidden lg:block xl:block overflow-hidden">
                 <div className="flex justify-between mb-2">
@@ -678,7 +693,7 @@ function MediumChat() {
                 </main>
 
                 <footer className="flex items-center p-4 border-t border-border">
-                    <input type="text" placeholder="Type a message...." value={msgInput} onChange={(event) => setMsgInput(event.target.value)} className="flex-1 p-2 border border-border rounded-lg outline-none" />
+                    <input type="text" placeholder="Type a message...." value={msgInput} onKeyPress={sendMessageByKey} onChange={(event) => setMsgInput(event.target.value)} className="flex-1 p-2 border border-border rounded-lg outline-none" />
                     {msgInput ? (
                         <IoMdSend className="text-black text-3xl mx-3 cursor-pointer" onClick={sendMessage} />
                     ) : (
@@ -686,57 +701,6 @@ function MediumChat() {
                     )}
                 </footer>
             </div>
-
-
-            {/* Right Side - Chat Box */}
-            {/* <div className="xl:w-[60%] lg:w-[60%] md:w-[100%] sm:w-[100%] w-full h-[100vh] relative">
-                {currentChat.map((user, index) => (
-                    <div className="top w-full border-b-[1px] flex justify-between items-center">
-                        <div className="left flex justify-center items-center">
-                            <Link to={'/'}>
-                                <FaArrowCircleLeft className="text-white text-3xl mx-2" />
-                            </Link>
-                            <Chat userName={user.username} userProfile={user.profilePicture} uid={user.uid} />
-                        </div>
-                        <div className="right flex">
-                            <MdOutlineVideoCall className="text-white text-3xl mx-3 cursor-pointer" />
-                            <SlOptionsVertical className="text-white text-3xl mx-3 cursor-pointer" />
-                        </div>
-                    </div>
-                ))} */}
-
-            {/* Center Area for Chat Messages */}
-            {/* <div className="center h-[calc(100vh-120px)] overflow-y-scroll p-4 custom-scrollbar">
-                    <div className="flex flex-col gap-4">
-                        {messages.map((msg, index) => (
-                            msg.senderUid === uid ? (
-                                <div key={index} className="flex justify-start">
-                                    <div className="bg-blue-500 text-white p-3 rounded-lg max-w-[60%]">{msg.message}</div>
-                                </div>
-                            ) : (
-                                <div key={index} className="flex justify-end">
-                                    <div className="bg-gray-500 text-white p-3 rounded-lg max-w-[60%]">{msg.message}</div>
-                                </div>
-                            )
-                        ))}
-                        <div ref={chatEndRef}></div>
-                    </div>
-                </div> */}
-
-            {/* Bottom Area for Message Input */}
-            {/* <div className="bottom absolute bottom-0 flex justify-between items-center w-full h-[60px] bg-[#313131]">
-                    <IoMdAttach className="text-white text-3xl mx-3 cursor-pointer" />
-                    <input
-                        type="text"
-                        placeholder="Type A Message....."
-                        className="bg-transparent text-xl resize-none placeholder:text-start placeholder:pt-3 placeholder:text-white placeholder:font-semibold border w-full h-[50px] outline-none text-white px-3"
-                        value={msgInput}
-                        onChange={(event) => setMsgInput(event.target.value)}
-                    />
-                    
-                </div>
-            </div>
-        </div> */}
         </div >
     )
 }
