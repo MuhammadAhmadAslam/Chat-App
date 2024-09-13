@@ -4,16 +4,15 @@
   }
   
   .custom-scrollbar::-webkit-scrollbar-track {
-    background: #1f2937; /* Background of the scrollbar track */
+    background: #fff; /* Background of the scrollbar track */
   }
   
   .custom-scrollbar::-webkit-scrollbar-thumb {
-    background-color: #3b82f6; /* Color of the scrollbar thumb */
+    background-color: #fff; /* Color of the scrollbar thumb */
     border-radius: 20px; /* Roundness of the scrollbar thumb */
-    border: 2px solid #1f2937; /* Padding around scrollbar thumb */
   }
   
   .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background-color: #2563eb; /* Color when hovering over scrollbar */
+    background-color: #fff; /* Color when hovering over scrollbar */
   }
   

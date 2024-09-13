@@ -8,17 +8,21 @@ function Login() {
 
       let [ email , setEmail ] = useState('')
       let [ password , setPassword] = useState('')
+      let [loading , setLoading] = useState(false)
       let navigate = useNavigate()
       let handleSignIn = async (event) => {
         event.preventDefault()
+        setLoading(true)
         signInWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
           const user = userCredential.user;
+          setLoading(false)
           navigate('/')
         })
         .catch((error) => {
           const errorCode = error.code;
           const errorMessage = error.message;
+          setLoading(false)
         });
       }
 
@@ -61,7 +65,9 @@ function Login() {
               className="bg-blue-500 hover:bg-blue-700 mt-5 text-xl text-white font-bold py-2 px-4 rounded"
               onClick={handleSignIn}
             >
-              Sign In
+             {
+              loading ? "Signing In" : "Sign In"
+             }
             </button>
           </div>
           <Link to={'/signup'} className="text-lg text-blue-300 mt-4">
