@@ -477,24 +477,28 @@ function MediumChat() {
                 `<h1 style="font-size: 30px; font-weight: bold;">${userProfile.username}</h1>` +
                 `<p>Email : ${userProfile.email}</p>` +
                 `<p>UID : ${userProfile.uid}</p>`,
-            confirmButtonText: 'OK',
-            confirmButtonColor: '#000'
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#000'
         })
     }
 
     // Get messages between the current user and the selected user
     const gettingMessages = () => {
         const chatId = [Currentuser.uid, uid].sort().join("_");  // Unique chat ID
+        
+        
         const docRef = doc(db, "chats", chatId);
 
         onSnapshot(docRef, (doc) => {
             if (doc.exists()) {
                 const data = doc.data();
+                console.log(data);
+                
                 setMessages(data.messages || []);
                 scrollToBottom();
             }
-        });
-    };
+        })
+    }
 
     // Get all users for the chat list
     const gettingUserChat = () => {
@@ -558,37 +562,37 @@ function MediumChat() {
 
     const sendMessageByKey = async (event) => {
         console.log(event.key);
-        
-       if (event.key == 'Enter') {
-           setMsgInput('')
-           const chatId = [Currentuser.uid, uid].sort().join("_");  // Unique chat ID
-           const docRef = doc(db, "chats", chatId);
-           const newMessage = {
-            senderUid: Currentuser.uid,
-            recieverUid: uid,
-            message: msgInput,
-            time: new Date().toLocaleTimeString(),
-            day: new Date().toDateString()
-        };
 
-        const chatSnapshot = await getDoc(docRef);
-
-        if (chatSnapshot.exists()) {
-            // Update the existing chat
-            await updateDoc(docRef, {
-                messages: [...chatSnapshot.data().messages, newMessage]
-            });
-
-        } else {
-            // Create a new chat document
-            await setDoc(docRef, {
-                messages: [newMessage],
-                participants: [Currentuser.uid, uid]
-            });
+        if (event.key == 'Enter') {
             setMsgInput('')
-        }
+            const chatId = [Currentuser.uid, uid].sort().join("_");  // Unique chat ID
+            const docRef = doc(db, "chats", chatId);
+            const newMessage = {
+                senderUid: Currentuser.uid,
+                recieverUid: uid,
+                message: msgInput,
+                time: new Date().toLocaleTimeString(),
+                day: new Date().toDateString()
+            };
 
-    }
+            const chatSnapshot = await getDoc(docRef);
+
+            if (chatSnapshot.exists()) {
+                // Update the existing chat
+                await updateDoc(docRef, {
+                    messages: [...chatSnapshot.data().messages, newMessage]
+                });
+
+            } else {
+                // Create a new chat document
+                await setDoc(docRef, {
+                    messages: [newMessage],
+                    participants: [Currentuser.uid, uid]
+                });
+                setMsgInput('')
+            }
+
+        }
 
     };
     useEffect(() => {
@@ -645,12 +649,12 @@ function MediumChat() {
                 {
                     currentChat.map((chat, index) => (
                         <header className="flex items-center justify-between p-4 border-b border-border" key={chat.uid}>
-                        <div className="flex justify-center items-center">
-                        <Link to={'/'}>
-                        <FaArrowCircleLeft className="text-black text-3xl my-1 mx-2 mr-3" />
-                        </Link>
-                            <img undefinedhidden="true" alt="profile-icon" src={chat.profilePicture} className="w-8 h-8 rounded-full" />
-                        </div>
+                            <div className="flex justify-center items-center">
+                                <Link to={'/'}>
+                                    <FaArrowCircleLeft className="text-black text-3xl my-1 mx-2 mr-3" />
+                                </Link>
+                                <img undefinedhidden="true" alt="profile-icon" src={chat.profilePicture} className="w-8 h-8 rounded-full" />
+                            </div>
                             <h1 className="text-lg font-semibold">{chat.username}</h1>
                             <div className="flex items-center space-x-2">
                                 <button className="text-muted hover:text-muted-foreground">
@@ -679,12 +683,12 @@ function MediumChat() {
                             msg.senderUid === uid ? (
                                 <div key={index} className="flex justify-start">
                                     <div className="bg-blue-500 text-white p-3 rounded-lg max-w-[60%]">{msg.message} <p className="text-[10px] text-right mt-3">{msg.time}</p></div>
-                                    
+
                                 </div>
                             ) : (
                                 <div key={index} className="flex justify-end">
                                     <div className="bg-gray-500 text-white p-3 rounded-lg max-w-[60%]">{msg.message} <p className="text-[10px] text-right mt-3">{msg.time}</p></div>
-                                    
+
                                 </div>
                             )
                         ))}

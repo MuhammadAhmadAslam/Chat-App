@@ -44,8 +44,13 @@ function UserContextProvider({ children }) {
 
         <UserContext.Provider value={{ user, setUser }}>
             {loading ? (
-                <div className="w-full h-96 flex justify-center items-center">
-                    <h1>Loading....</h1>
+                <div className="w-full h-[100vh] flex flex-col justify-evenly items-center">
+                    <img src="https://static.vecteezy.com/system/resources/thumbnails/018/930/748/small/whatsapp-logo-whatsapp-icon-whatsapp-transparent-free-png.png" alt="" />
+                    <div className="flex justify-center items-center flex-col">
+                        <p>From</p>
+                        <div className="border-b-[1px] w-[100px]"></div>
+                        <h1 className="font-bold text-3xl">Ahmed</h1>
+                    </div>
                 </div>
             ) : (
                 children
