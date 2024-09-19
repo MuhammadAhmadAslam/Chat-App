@@ -16,8 +16,9 @@ import { app } from "../Firebase/firebase";
 import Swal from "sweetalert2";
 import { CiSearch } from "react-icons/ci";
 import "./Chat.css";
-
+import run from "../../Gemini/Gemini";
 function MediumChat() {
+
     const db = getFirestore(app);
     const chatEndRef = useRef(null);
     const navigate = useNavigate();
@@ -73,15 +74,15 @@ function MediumChat() {
                 `<h1 style="font-size: 30px; font-weight: bold;">${userProfile.username}</h1>` +
                 `<p>Email : ${userProfile.email}</p>` +
                 `<p>UID : ${userProfile.uid}</p>`,
-                confirmButtonText: 'OK',
-                confirmButtonColor: '#000'
+            confirmButtonText: 'OK',
+            confirmButtonColor: '#000'
         })
     }
 
     // Get messages between the current user and the selected user
     const gettingMessages = () => {
         const chatId = [Currentuser.uid, uid].sort().join("_");  // Unique chat ID
-        console.log(chatId);     
+        console.log(chatId);
         const docRef = doc(db, "chats", chatId);
         onSnapshot(docRef, (doc) => {
             if (doc.exists()) {
@@ -120,40 +121,8 @@ function MediumChat() {
 
     // Send a message
     const sendMessage = async () => {
-        setMsgInput('')
-        const chatId = [Currentuser.uid, uid].sort().join("_");  // Unique chat ID
-        const docRef = doc(db, "chats", chatId);
-        const newMessage = {
-            senderUid: Currentuser.uid,
-            recieverUid: uid,
-            message: msgInput,
-            time: new Date().toLocaleTimeString(),
-            day: new Date().toDateString()
-        };
+        if (uid != "vN2WwQMQLXVAkhCF2COBgsntlMG3") {
 
-        const chatSnapshot = await getDoc(docRef);
-
-        if (chatSnapshot.exists()) {
-            // Update the existing chat
-            await updateDoc(docRef, {
-                messages: [...chatSnapshot.data().messages, newMessage]
-            });
-
-        } else {
-            // Create a new chat document
-            await setDoc(docRef, {
-                messages: [newMessage],
-                participants: [Currentuser.uid, uid]
-            });
-            setMsgInput('')
-        }
-
-
-    };
-
-
-    const sendMessageByKey = async (event) => {
-        if (event.key == 'Enter') {
             setMsgInput('')
             const chatId = [Currentuser.uid, uid].sort().join("_");  // Unique chat ID
             const docRef = doc(db, "chats", chatId);
@@ -182,7 +151,80 @@ function MediumChat() {
                 setMsgInput('')
             }
 
+
+        } else {
+            run(msgInput)
+            setMsgInput('')
+            const chatId = [Currentuser.uid, uid].sort().join("_");  // Unique chat ID
+            const docRef = doc(db, "chats", chatId);
+            const newMessage = {
+                senderUid: Currentuser.uid,
+                recieverUid: uid,
+                message: msgInput,
+                time: new Date().toLocaleTimeString(),
+                day: new Date().toDateString()
+            };
+
+            const chatSnapshot = await getDoc(docRef);
+
+            if (chatSnapshot.exists()) {
+                await updateDoc(docRef, {
+                    messages: [...chatSnapshot.data().messages, newMessage]
+                });
+            } else {
+                await setDoc(docRef, {
+                    messages: [newMessage],
+                    participants: [Currentuser.uid, uid]
+                });
+                setMsgInput('')
+            }
+
         }
+
+
+    };
+
+
+    const sendMessageByKey = async (event) => {
+        if (event.key == 'Enter') {
+            if (uid != "vN2WwQMQLXVAkhCF2COBgsntlMG3") {
+                setMsgInput('')
+                const chatId = [Currentuser.uid, uid].sort().join("_");  // Unique chat ID
+                const docRef = doc(db, "chats", chatId);
+                const newMessage = {
+                    senderUid: Currentuser.uid,
+                    recieverUid: uid,
+                    message: msgInput,
+                    time: new Date().toLocaleTimeString(),
+                    day: new Date().toDateString()
+                };
+
+                const chatSnapshot = await getDoc(docRef);
+
+                if (chatSnapshot.exists()) {
+                    // Update the existing chat
+                    await updateDoc(docRef, {
+                        messages: [...chatSnapshot.data().messages, newMessage]
+                    });
+
+                } else {
+                    // Create a new chat document
+                    await setDoc(docRef, {
+                        messages: [newMessage],
+                        participants: [Currentuser.uid, uid]
+                    });
+                    setMsgInput('')
+                }
+
+            } else {
+                console.log('yae tau ai hae ');
+
+            }
+
+
+        }
+
+
 
     };
     useEffect(() => {
