@@ -37,7 +37,6 @@ async function run(prompt) {
 
     const promptString = String(prompt);
     console.log(String(promptString) , "yae prompt chala gaya");
-    
     const result = await chatSession.sendMessage(promptString);
     console.log(result.response.text());
     return result.response.text();

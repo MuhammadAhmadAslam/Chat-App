@@ -119,13 +119,13 @@ function MediumChat() {
         });
     };
 
-    // Send a message
+    // send a message
     const sendMessage = async () => {
-        if (uid != "vN2WwQMQLXVAkhCF2COBgsntlMG3") {
-
-            setMsgInput('')
-            const chatId = [Currentuser.uid, uid].sort().join("_");  // Unique chat ID
-            const docRef = doc(db, "chats", chatId);
+        const chatId = [Currentuser.uid, uid].sort().join("_");  // Unique chat ID
+        const docRef = doc(db, "chats", chatId);
+    
+        if (uid !== "vN2WwQMQLXVAkhCF2COBgsntlMG3") {
+            setMsgInput(''); // Clear the input
             const newMessage = {
                 senderUid: Currentuser.uid,
                 recieverUid: uid,
@@ -133,30 +133,26 @@ function MediumChat() {
                 time: new Date().toLocaleTimeString(),
                 day: new Date().toDateString()
             };
-
+    
             const chatSnapshot = await getDoc(docRef);
-
+    
             if (chatSnapshot.exists()) {
                 // Update the existing chat
                 await updateDoc(docRef, {
                     messages: [...chatSnapshot.data().messages, newMessage]
                 });
-
             } else {
                 // Create a new chat document
                 await setDoc(docRef, {
                     messages: [newMessage],
                     participants: [Currentuser.uid, uid]
                 });
-                setMsgInput('')
             }
-
-
+    
         } else {
-            run(msgInput)
-            setMsgInput('')
-            const chatId = [Currentuser.uid, uid].sort().join("_");  // Unique chat ID
-            const docRef = doc(db, "chats", chatId);
+            let runFunction = await run(msgInput);  // Get AI response
+            console.log(runFunction, "this is response from gemini");
+    
             const newMessage = {
                 senderUid: Currentuser.uid,
                 recieverUid: uid,
@@ -164,26 +160,50 @@ function MediumChat() {
                 time: new Date().toLocaleTimeString(),
                 day: new Date().toDateString()
             };
-
+    
+            setMsgInput(''); // Clear the input
+    
+            // First add the user message
             const chatSnapshot = await getDoc(docRef);
-
+    
             if (chatSnapshot.exists()) {
+                // Update the existing chat with user message
                 await updateDoc(docRef, {
                     messages: [...chatSnapshot.data().messages, newMessage]
                 });
             } else {
+                // Create a new chat document with user message
                 await setDoc(docRef, {
                     messages: [newMessage],
                     participants: [Currentuser.uid, uid]
                 });
-                setMsgInput('')
             }
-
+    
+            if (runFunction) {
+                const AIMessage = {
+                    senderUid: uid,
+                    recieverUid: Currentuser.uid,
+                    message: runFunction,  // AI response as the message
+                    time: new Date().toLocaleTimeString(),
+                    day: new Date().toDateString()
+                };
+    
+                // Now add the AI message
+                const chatSnapshot = await getDoc(docRef);  // Refresh chatSnapshot
+                if (chatSnapshot.exists()) {
+                    await updateDoc(docRef, {
+                        messages: [...chatSnapshot.data().messages, AIMessage]
+                    });
+                } else {
+                    await setDoc(docRef, {
+                        messages: [AIMessage],
+                        participants: [Currentuser.uid, uid]
+                    });
+                }
+            }
         }
-
-
     };
-
+    
 
     const sendMessageByKey = async (event) => {
         if (event.key == 'Enter') {
