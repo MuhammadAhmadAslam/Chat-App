@@ -4,8 +4,9 @@ import { Link, useNavigate } from "react-router-dom";
 import { auth } from "../Firebase/firebase";
 import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
 import { doc, getFirestore, setDoc } from "firebase/firestore";
-import { ref, uploadBytesResumable, getDownloadURL, getStorage} from "firebase/storage";
+import { ref, uploadBytesResumable, getDownloadURL, getStorage } from "firebase/storage";
 import { app } from "../Firebase/firebase";
+import Swal from "sweetalert2";
 function SignUp() {
     const auth = getAuth();
     const storage = getStorage();
@@ -17,25 +18,23 @@ function SignUp() {
     let [user, setUser] = useState(null);
     let [profilePicture, setProfilePicture] = useState(null);
     let navigate = useNavigate()
-    
+
     async function signUpUser() {
 
         setLoading(true);
         createUserWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
                 const user = userCredential.user;
-                console.log('user successfully signed up');
 
                 const storageRef = ref(storage, `profile-pictures/${user.uid}`);
                 const uploadTask = uploadBytesResumable(storageRef, profilePicture);
                 uploadTask.on(
                     "state_changed",
                     (snapshot) => {
-                        console.log('starting....');
-                        
+
+
                     },
                     (error) => {
-                        console.error(error);
                     },
                     () => {
                         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
@@ -58,6 +57,12 @@ function SignUp() {
 
                             setUser(user);
                             setLoading(false);
+                            Swal.fire({
+                                icon: "success",
+                                title: "Your Account Has Been Created Explore Ahmed Whatsapp",
+                                showConfirmButton: false,
+                                timer: 1500
+                            });
                             navigate('/login')
                         });
                     }
@@ -65,9 +70,29 @@ function SignUp() {
             })
             .catch((error) => {
                 const errorCode = error.code;
-                const errorMessage = error.message;
-                console.log(errorCode);
-                console.log(errorMessage);
+                if (errorCode == "auth/email-already-in-use") {
+                    Swal.fire({
+                        title: "Email Already In Use",
+                        text: "Please Login You Will Be ReDirected To Login Page",
+                        icon: "question"
+                    });
+                    setTimeout(() => {
+                        navigate('/login')
+                    }, 1000);
+                }
+
+                if (errorCode == "auth/weak-password") {
+                    Swal.fire({
+                        title: "Weak Password",
+                        text: "Please Make A Strong Password Password Should Be 7 Character Long Including Text Number Symbols",
+                        icon: "error"
+                    });
+                }
+
+                setEmail('')
+                setPassword('')
+                setUserName('')
+                setProfilePicture(null)
                 setLoading(false);
             });
     }

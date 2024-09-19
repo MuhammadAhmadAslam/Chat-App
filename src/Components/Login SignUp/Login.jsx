@@ -3,28 +3,39 @@ import React, { useState } from "react";
 import { FaEnvelope, FaUser, FaLock } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import { auth } from "../Firebase/firebase";
+import Swal from "sweetalert2";
 
 function Login() {
 
-      let [ email , setEmail ] = useState('')
-      let [ password , setPassword] = useState('')
-      let [loading , setLoading] = useState(false)
-      let navigate = useNavigate()
-      let handleSignIn = async (event) => {
-        event.preventDefault()
-        setLoading(true)
-        signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-          const user = userCredential.user;
-          setLoading(false)
-          navigate('/')
-        })
-        .catch((error) => {
-          const errorCode = error.code;
-          const errorMessage = error.message;
-          setLoading(false)
-        });
-      }
+  let [email, setEmail] = useState('')
+  let [password, setPassword] = useState('')
+  let [loading, setLoading] = useState(false)
+  let navigate = useNavigate()
+  let handleSignIn = async (event) => {
+    event.preventDefault()
+    setLoading(true)
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        const user = userCredential.user;
+        setLoading(false)
+        navigate('/')
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        console.log(errorCode);
+        if (errorCode == "auth/invalid-credential") {
+          Swal.fire({
+            title: "Invlaid Creditenal",
+            text: "Wrong Email And Password",
+            icon: "error"
+          });
+        }
+        const errorMessage = error.message;
+        setLoading(false)
+        setEmail('')
+        setPassword('')
+      });
+  }
 
   return (
     <div className="flex min-h-[100vh] h-[100%] justify-center items-center">
@@ -65,9 +76,9 @@ function Login() {
               className="bg-zinc-900 hover:bg-zinc-700 mt-5 text-xl text-white font-bold py-2 px-4 rounded"
               onClick={handleSignIn}
             >
-             {
-              loading ? "Signing In" : "Sign In"
-             }
+              {
+                loading ? "Signing In" : "Sign In"
+              }
             </button>
           </div>
           <Link to={'/signup'} className="text-lg text-zinc-900 mt-4">
