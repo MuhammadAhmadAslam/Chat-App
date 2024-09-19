@@ -17,6 +17,7 @@ import Swal from "sweetalert2";
 import { CiSearch } from "react-icons/ci";
 import "./Chat.css";
 import run from "../../Gemini/Gemini";
+import { Avatar, Image } from "antd";
 function MediumChat() {
 
     const db = getFirestore(app);
@@ -137,6 +138,91 @@ function MediumChat() {
             const chatSnapshot = await getDoc(docRef);
     
             if (chatSnapshot.exists()) {
+                await updateDoc(docRef, {
+                    messages: [...chatSnapshot.data().messages, newMessage]
+                });
+            } else {
+
+                await setDoc(docRef, {
+                    messages: [newMessage],
+                    participants: [Currentuser.uid, uid]
+                });
+            }
+    
+        } else {
+            let runFunction = await run(msgInput); 
+            console.log(runFunction, "this is response from gemini");
+    
+            const newMessage = {
+                senderUid: Currentuser.uid,
+                recieverUid: uid,
+                message: msgInput,
+                time: new Date().toLocaleTimeString(),
+                day: new Date().toDateString()
+            };
+    
+            setMsgInput('');
+    
+           
+            const chatSnapshot = await getDoc(docRef);
+    
+            if (chatSnapshot.exists()) {
+            
+                await updateDoc(docRef, {
+                    messages: [...chatSnapshot.data().messages, newMessage]
+                });
+            } else {
+               
+                await setDoc(docRef, {
+                    messages: [newMessage],
+                    participants: [Currentuser.uid, uid]
+                });
+            }
+    
+            if (runFunction) {
+                const AIMessage = {
+                    senderUid: uid,
+                    recieverUid: Currentuser.uid,
+                    message: runFunction,  // AI response as the message
+                    time: new Date().toLocaleTimeString(),
+                    day: new Date().toDateString()
+                };
+    
+            
+                const chatSnapshot = await getDoc(docRef);  // Refresh chatSnapshot
+                if (chatSnapshot.exists()) {
+                    await updateDoc(docRef, {
+                        messages: [...chatSnapshot.data().messages, AIMessage]
+                    });
+                } else {
+                    await setDoc(docRef, {
+                        messages: [AIMessage],
+                        participants: [Currentuser.uid, uid]
+                    });
+                }
+            }
+        }
+    };
+    
+
+    const sendMessageByKey = async (event) => {
+        if (event.key == 'Enter') {
+            const chatId = [Currentuser.uid, uid].sort().join("_");  // Unique chat ID
+        const docRef = doc(db, "chats", chatId);
+    
+        if (uid !== "vN2WwQMQLXVAkhCF2COBgsntlMG3") {
+            setMsgInput(''); // Clear the input
+            const newMessage = {
+                senderUid: Currentuser.uid,
+                recieverUid: uid,
+                message: msgInput,
+                time: new Date().toLocaleTimeString(),
+                day: new Date().toDateString()
+            };
+    
+            const chatSnapshot = await getDoc(docRef);
+    
+            if (chatSnapshot.exists()) {
                 // Update the existing chat
                 await updateDoc(docRef, {
                     messages: [...chatSnapshot.data().messages, newMessage]
@@ -202,51 +288,13 @@ function MediumChat() {
                 }
             }
         }
-    };
-    
-
-    const sendMessageByKey = async (event) => {
-        if (event.key == 'Enter') {
-            if (uid != "vN2WwQMQLXVAkhCF2COBgsntlMG3") {
-                setMsgInput('')
-                const chatId = [Currentuser.uid, uid].sort().join("_");  // Unique chat ID
-                const docRef = doc(db, "chats", chatId);
-                const newMessage = {
-                    senderUid: Currentuser.uid,
-                    recieverUid: uid,
-                    message: msgInput,
-                    time: new Date().toLocaleTimeString(),
-                    day: new Date().toDateString()
-                };
-
-                const chatSnapshot = await getDoc(docRef);
-
-                if (chatSnapshot.exists()) {
-                    // Update the existing chat
-                    await updateDoc(docRef, {
-                        messages: [...chatSnapshot.data().messages, newMessage]
-                    });
-
-                } else {
-                    // Create a new chat document
-                    await setDoc(docRef, {
-                        messages: [newMessage],
-                        participants: [Currentuser.uid, uid]
-                    });
-                    setMsgInput('')
-                }
-
-            } else {
-                console.log('yae tau ai hae ');
-
-            }
-
-
         }
 
 
 
     };
+
+
     useEffect(() => {
         gettingData();
         gettingMessages();
@@ -279,9 +327,9 @@ function MediumChat() {
                         allUsers.map((user, index) => (
                             <Link to={`/chat/uid/${user.uid}/userName/:${user.username}/`} className="flex flex-col space-y-2">
                                 <div className="flex items-center p-2 border-b border-border">
-                                    <img src={user.profilePicture} alt="User Avatar" className="w-[40px] h-[40px] mr-2" />
+                                    <Image src={user.profilePicture} alt="User Avatar" width={60} height={60} />
                                     <div className="flex-1">
-                                        <span className="font-semibold">{user.username}</span>
+                                        <span className="font-semibold mx-4">{user.username}</span>
                                         {/* <span className="text-muted-foreground block">King Saud University</span> */}
                                     </div>
                                 </div>
