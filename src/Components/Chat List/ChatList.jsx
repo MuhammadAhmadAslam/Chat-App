@@ -106,7 +106,9 @@ function ChatList() {
     }
 
 
-
+    allUsers.map((profile) => {
+            console.log(profile.profilePicture , profile.username); 
+    })
 
     return (
         <>
@@ -129,27 +131,27 @@ function ChatList() {
                         <input type="text" placeholder="Search..." className="w-full pl-10 bg-[#F0F2F5] p-2 outline-none rounded-lg dark:bg-input dark:text-foreground" />
                     </div>
                     <div className="overflow-y-scroll h-[100%] custom-scrollbar">
-                        {
-                            allUsers.map((user, index) => (
-                                <Link to={`/chat/uid/${user.uid}/userName/:${user.username}/`} className="flex flex-col space-y-2 h-[80px] justify-center items-start w-full">
-                                    <div className="flex items-center p-2 border-b border-border">
-                                        <img src={user.profilePicture} alt="User Avatar" className="w-[60px] h-[60px] mr-2" />
-                                        <div className="flex-1 pb-2">
-                                            <span className="font-semibold text-xl">{user.username}</span>
-                                            {/* <span className="text-muted-foreground block">King Saud University</span> */}
-                                        </div>
+                    {
+                        allUsers.map((user, index) => (
+                            <Link to={`/chat/uid/${user.uid}/userName/:${user.username}/`} className="flex flex-col space-y-2">
+                                <div className="flex items-center p-2 border-b border-border">
+                                    <Image src={user.profilePicture} alt="User Avatar" width={60} height={60} />
+                                    <div className="flex-1">
+                                        <span className="font-semibold mx-4">{user.username}</span>
+                                        {/* <span className="text-muted-foreground block">King Saud University</span> */}
                                     </div>
-                                </Link>
-                            ))
-                        }
+                                </div>
+                            </Link>
+                        ))
+                    }
                     </div>
                 </div>
-                
+
 
 
                 <div className="xl:w-[60%] lg:w-[60%] md:hidden sm:hidden lg:block xl:block hidden relative bg-[url(https://www.shutterstock.com/image-vector/social-media-sketch-vector-seamless-600nw-1660950727.jpg)]">
                     <div className="flex flex-col justify-center text-white items-center h-[100%]">
-                        
+
                         <h1 className="text-4xl font-semibold text-center px-5 text-black">Ahmed Whatsapp For Windows Linux & MacOS </h1>
                         <p className="text-lg mt-4 text-center px-5 text-black">Send And Recieve Message Without Keeping Your Phone Online</p>
                     </div>

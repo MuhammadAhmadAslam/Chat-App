@@ -27,11 +27,12 @@ function SignUp() {
                 const user = userCredential.user;
 
                 const storageRef = ref(storage, `profile-pictures/${user.uid}`);
-                const uploadTask = uploadBytesResumable(storageRef, profilePicture);
-                uploadTask.on(
+                if (profilePicture) {    
+                    const uploadTask = uploadBytesResumable(storageRef, profilePicture);
+                    uploadTask.on(
                     "state_changed",
                     (snapshot) => {
-
+                        
 
                     },
                     (error) => {
@@ -45,16 +46,7 @@ function SignUp() {
                                 profilePicture: downloadURL,
                                 uid: user.uid,
                             });
-                            const userChat = doc(db, 'User Chats', user.uid);
-                            setDoc(userChat, {
-                                username,
-                                email,
-                                profilePicture: downloadURL,
-                                uid: user.uid,
-                                userChats: {}
-                            });
-
-
+                            
                             setUser(user);
                             setLoading(false);
                             Swal.fire({
@@ -67,6 +59,25 @@ function SignUp() {
                         });
                     }
                 );
+            }else{
+                const userRef = doc(db, 'Users Information', user.uid);
+                setDoc(userRef, {
+                    username,
+                    email,
+                    profilePicture: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7U_ef87Q7CQ1Fx_khkPq-y9IfPmBWrMZ6ig&s",
+                    uid: user.uid,
+                });
+                
+                setUser(user);
+                setLoading(false);
+                Swal.fire({
+                    icon: "success",
+                    title: "Your Account Has Been Created Explore Ahmed Whatsapp",
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+                navigate('/login')
+            }
             })
             .catch((error) => {
                 const errorCode = error.code;
@@ -80,7 +91,7 @@ function SignUp() {
                         navigate('/login')
                     }, 1000);
                 }
-
+                
                 if (errorCode == "auth/weak-password") {
                     Swal.fire({
                         title: "Weak Password",
