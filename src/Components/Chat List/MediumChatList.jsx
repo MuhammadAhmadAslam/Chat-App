@@ -513,10 +513,10 @@ function MediumChat() {
                     </div>
                 </main>
 
-                <footer className="flex items-center p-4 border-t border-border">
+                <footer className="flex items-center border-t border-border">
                     <input type="file" id="fileInput" hidden onChange={handleFileChange} />
                     <label htmlFor="fileInput">
-                        <FiPaperclip className="text-black text-3xl mx-3 cursor-pointer" />
+                        <FiPaperclip className="text-black text-xl lg:text-3xl xl:text-3xl  mx-3 cursor-pointer" />
                     </label>
                     <input type="text" placeholder="Type a message...." value={msgInput} onKeyPress={sendMessageByKey} onChange={(event) => setMsgInput(event.target.value)} className="flex-1 p-2 border border-border rounded-lg outline-none" />
                     {msgInput ? (
