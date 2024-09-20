@@ -510,7 +510,6 @@ function MediumChat() {
                                 </div>
                             )
                         ))}
-                        <div ref={chatEndRef}></div>
                     </div>
                 </main>
 

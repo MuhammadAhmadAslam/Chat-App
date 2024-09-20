@@ -14,6 +14,7 @@ import { app } from "../Firebase/firebase";
 import Swal from "sweetalert2";
 import { Link } from "react-router-dom";
 import { CiSearch } from "react-icons/ci";
+import { Image } from "antd";
 function ChatList() {
 
     const db = getFirestore(app);
@@ -30,17 +31,17 @@ function ChatList() {
     }
 
 
-    const chatEndRef = useRef(null);
+    // const chatEndRef = useRef(null);
 
 
-    const scrollToBottom = () => {
-        chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-    };
+    // const scrollToBottom = () => {
+    //     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    // };
 
 
-    useEffect(() => {
-        scrollToBottom();
-    }, []);
+    // useEffect(() => {
+    //     scrollToBottom();
+    // }, []);
 
 
     let handleSignOut = () => {

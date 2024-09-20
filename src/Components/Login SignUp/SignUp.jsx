@@ -25,9 +25,8 @@ function SignUp() {
         createUserWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
                 const user = userCredential.user;
-
-                const storageRef = ref(storage, `profile-pictures/${user.uid}`);
                 if (profilePicture) {    
+                    const storageRef = ref(storage, `profile-pictures/${user.uid}`);
                     const uploadTask = uploadBytesResumable(storageRef, profilePicture);
                     uploadTask.on(
                     "state_changed",
