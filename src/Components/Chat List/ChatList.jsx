@@ -3,10 +3,7 @@ import { useRef, useEffect, useContext } from "react";
 import { FaCirclePlus } from "react-icons/fa6";
 import { SlOptionsVertical } from "react-icons/sl";
 import { FaUserCircle } from "react-icons/fa";
-import Chat from "./Chat";
-import ChatTop from "./ChatTop";
 import "./Chat.css"
-import ChatCenter from "./ChatCenter";
 import { LuLogOut } from "react-icons/lu";
 import { useNavigate } from "react-router";
 import { UserContext } from "../app context/Usercontext";

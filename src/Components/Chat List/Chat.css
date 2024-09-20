@@ -1,18 +1,87 @@
 /* Custom Scrollbar Styles */
 .custom-scrollbar::-webkit-scrollbar {
-    width: 8px; /* Width of the entire scrollbar */
-  }
-  
-  .custom-scrollbar::-webkit-scrollbar-track {
-    background: #fff; /* Background of the scrollbar track */
-  }
-  
-  .custom-scrollbar::-webkit-scrollbar-thumb {
-    background-color: #fff; /* Color of the scrollbar thumb */
-    border-radius: 20px; /* Roundness of the scrollbar thumb */
-  }
-  
-  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background-color: #fff; /* Color when hovering over scrollbar */
-  }
-  
+  width: 8px;
+  /* Width of the entire scrollbar */
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #fff;
+  /* Background of the scrollbar track */
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #fff;
+  /* Color of the scrollbar thumb */
+  border-radius: 20px;
+  /* Roundness of the scrollbar thumb */
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: #fff;
+  /* Color when hovering over scrollbar */
+}
+
+.swal-container {
+  background-color: #f7f7f7;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 100%;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.swal-popup {
+  width: 700px;
+  padding: 20px;
+}
+
+.swal-header {
+  background-color: #333;
+  color: #fff;
+  padding: 10px;
+  border-bottom: 1px solid #333;
+}
+
+.swal-title {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.swal-image-container {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.swal-image {
+  width: 100%;
+  height: 600px;
+  object-fit: cover;
+  border-radius: 5px;
+}
+
+.swal-button-container {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.swal-button {
+  background-color: #337ab7;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  margin-top: 20px;
+  cursor: pointer;
+}
+
+.swal-button:hover {
+  background-color: #23527c;
+}
+
+.swal-button--blue {
+  background-color: #337ab7;
+}
+
+.swal-button--blue:hover {
+  background-color: #23527c;
+}
