@@ -147,9 +147,9 @@ function ChatList() {
                 
 
 
-                <div className="xl:w-[60%] lg:w-[60%] md:hidden sm:hidden lg:block xl:block hidden relative">
+                <div className="xl:w-[60%] lg:w-[60%] md:hidden sm:hidden lg:block xl:block hidden relative bg-[url(https://www.shutterstock.com/image-vector/social-media-sketch-vector-seamless-600nw-1660950727.jpg)]">
                     <div className="flex flex-col justify-center text-white items-center h-[100%]">
-                        <img src="https://previews.123rf.com/images/djvstock/djvstock1811/djvstock181109717/112343609-man-chating-on-a-laptop-computer-over-white-background-vector-illustration.jpg" alt="" className="w-[50%] mt-5 mb-5" />
+                        
                         <h1 className="text-4xl font-semibold text-center px-5 text-black">Ahmed Whatsapp For Windows Linux & MacOS </h1>
                         <p className="text-lg mt-4 text-center px-5 text-black">Send And Recieve Message Without Keeping Your Phone Online</p>
                     </div>

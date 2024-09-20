@@ -463,7 +463,7 @@ function MediumChat() {
                     ))
                 }
 
-                <main className="flex-1 p-4 overflow-y-auto bg-muted">
+                <main className="flex-1 p-4 overflow-y-auto bg-muted bg-[url(https://www.shutterstock.com/image-vector/social-media-sketch-vector-seamless-600nw-1660950727.jpg)] ">
                     <div className="flex flex-col space-y-4">
 
                         <div className="text-center text-muted-foreground">
