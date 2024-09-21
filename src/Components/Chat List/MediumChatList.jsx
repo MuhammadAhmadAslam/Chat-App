@@ -305,6 +305,7 @@ function MediumChat() {
     }, [uid]);
 
 
+    // sending a picture
     let [msgPicture, setMsgPicture] = useState(null)
     let [downloadURLs, setdownloadURLs] = useState('')
     const handleFileChange = (e) => {
