@@ -160,7 +160,8 @@ function MediumChat() {
                 recieverUid: uid,
                 message: msgInput,
                 time: new Date().toLocaleTimeString(),
-                day: new Date().toDateString()
+                day: new Date().toDateString(),
+                lastMessage: msgInput,
             };
 
             setMsgInput('');
@@ -174,7 +175,6 @@ function MediumChat() {
                     messages: [...chatSnapshot.data().messages, newMessage]
                 });
             } else {
-
                 await setDoc(docRef, {
                     messages: [newMessage],
                     participants: [Currentuser.uid, uid]
@@ -187,7 +187,8 @@ function MediumChat() {
                     recieverUid: Currentuser.uid,
                     message: runFunction,  // AI response as the message
                     time: new Date().toLocaleTimeString(),
-                    day: new Date().toDateString()
+                    day: new Date().toDateString(),
+                    lastMessage: msgInput,
                 };
 
 
@@ -219,7 +220,8 @@ function MediumChat() {
                     recieverUid: uid,
                     message: msgInput,
                     time: new Date().toLocaleTimeString(),
-                    day: new Date().toDateString()
+                    day: new Date().toDateString(),
+                    lastMessage: msgInput
                 };
 
                 const chatSnapshot = await getDoc(docRef);
@@ -420,7 +422,7 @@ function MediumChat() {
                     <CiSearch className="absolute left-3" />
                     <input type="text" placeholder="Search..." className="w-full pl-10 bg-[#F0F2F5] p-2 outline-none rounded-lg dark:bg-input dark:text-foreground" />
                 </div>
-                <div className="overflow-y-scroll h-[100%] custom-scrollbar">
+                <div className="overflow-y-scroll h-[100%] custom-scrollbar pb-40">
                     {
                         allUsers.map((user, index) => (
                             <Link to={`/chat/uid/${user.uid}/userName/:${user.username}/`} className="flex flex-col space-y-2">
@@ -428,7 +430,7 @@ function MediumChat() {
                                     <Image src={user.profilePicture} alt="User Avatar" width={60} height={60} />
                                     <div className="flex-1">
                                         <span className="font-semibold mx-4">{user.username}</span>
-                                        {/* <span className="text-muted-foreground block">King Saud University</span> */}
+                                         {/* <span className="text-muted-foreground block mx-4">King Saud University</span> */}
                                     </div>
                                 </div>
                             </Link>
